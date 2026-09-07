@@ -15,10 +15,16 @@ venv/
 
 # Large raw datasets / archives (too big for GitHub, keep out of git)
 Code_Refinement/
-Code_Refinement.zip
+# Catches any zip anywhere in the repo, not just one exact filename — this
+# project has repeatedly produced differently-named large result bundles
+# (coderefine_results.zip, coderefine_results_file.zip, ...) that each broke
+# the push the same way (GitHub's 100MB/file hard limit) until the exact name
+# was added here. A blanket rule means the next variant can't slip through.
+*.zip
 
 # Training outputs and model artifacts (generated, not source)
 artifacts/
+coderefine_results*/
 
 # Model weight / checkpoint formats, wherever they end up
 *.safetensors
