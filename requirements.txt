@@ -20,14 +20,23 @@ tqdm>=4.66
 # --- data ---
 datasets>=2.19
 pandas>=2.2
-numpy>=1.26
+numpy>=1.26,<2  # torch wheels below are built against the NumPy 1.x ABI
 
 # --- modelling (CPU wheels are fine; CUDA hosts get the cu12 build) ---
-torch>=2.4
-transformers>=4.44
-peft>=0.12
-trl>=0.9.6
-accelerate>=0.33
+# transformers/peft/trl/accelerate are pinned, not just floored: newer TRL
+# replaced the completion-only-loss collator this project relies on with a
+# mechanism that silently no-ops for Mistral (see src/coderefine/train.py's
+# module docstring). This exact combo is the one actually verified end-to-end.
+# torch's floor is lowered from 2.4, not pinned: newer transformers requires
+# torch>=2.5, which has no Intel-macOS wheel at all (PyPI dropped x86_64
+# macOS builds after torch 2.2.2) — but a CUDA host should still get whatever
+# recent torch build it already has, so only the floor changes, no ceiling.
+torch>=2.2
+transformers==4.46.3
+peft==0.13.2
+trl==0.11.4
+accelerate==1.2.1
+tokenizers<0.21
 sentencepiece>=0.2
 safetensors>=0.4.3
 
